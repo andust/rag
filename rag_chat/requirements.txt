@@ -1,0 +1,13 @@
+alembic==1.13.3
+email_validator==2.2.0
+fastapi==0.115.3
+langchain-openai==0.2.3
+langchain==0.3.4
+nltk==3.9.1
+openai==1.52.2
+pydantic-settings==2.5.0
+pydantic==2.9.2
+python-dotenv==1.0.1
+ruff==0.6.4
+toolz==1.0.0
+uvicorn==0.30.6

@@ -1,0 +1,61 @@
+version: "3"
+
+services:
+  rag_client:
+    container_name: rag_client
+    hostname: rag_client
+    image: rag_client
+    build: ./rag_client
+    volumes:
+      - ./rag_client/app/:/code/rag_client/
+      - /code/rag_client/node_modules
+    ports:
+      - 3000:3000
+
+  rag_chat:
+    container_name: rag_chat
+    hostname: rag_chat
+    image: rag_chat
+    build: ./rag_chat
+    volumes:
+      - ./rag_chat/:/code/rag_chat/
+    ports:
+      - 7007:80
+
+  rag_user_srv:
+    container_name: rag_user_srv
+    hostname: rag_user_srv
+    image: rag_user_srv
+    build: ./rag_user_srv
+    command: >
+      sh -c "go install github.com/air-verse/air@v1.52.2 &&
+             air"
+    env_file:
+      - ./rag_user_srv/.env
+    volumes:
+      - ./rag_user_srv/app/:/code/rag_user_srv/
+    ports:
+      - 7008:7008
+
+  rag_db_mongo:
+    container_name: rag_db_mongo
+    hostname: rag_db_mongo
+    image: mongo:7.0
+    environment:
+      DB_NAME: ragm_db
+      DB_USERNAME: admin
+      DB_PASSWORD: password
+    volumes:
+      - ./db-data/mongo/:/data/db
+    ports:
+      - 27017:27017
+
+  rag_redis:
+    container_name: rag_redis
+    hostname: rag_redis
+    image: redis:7.4
+    command: redis-server --save 20 1 --loglevel warning --requirepass q2sGPHduXqKHSsYlz59FF9i7hc8VUraQ
+    volumes:
+      - ./cache:/data
+    ports:
+      - 6379:6379
