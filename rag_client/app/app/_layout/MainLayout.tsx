@@ -15,7 +15,7 @@ export default async function MainLayout({
   return (
     <LoadUser>
       <Header />
-      <main className="font-[family-name:var(--font-geist-sans)]">
+      <main className="font-[family-name:var(--font-geist-sans)] container">
         {children}
       </main>
     </LoadUser>
