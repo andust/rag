@@ -1,13 +1,14 @@
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getUser } from "./app/_utils/fetch";
 import { headerAccess } from "./app/_utils/cookie";
+import { request } from "http";
 
-export async function middleware() {
-  const unauthorizedResponse = new NextResponse("Unauthorized", {
-    status: 401,
-  });
+export async function middleware(request: NextRequest) {
+  const unauthorizedResponse = NextResponse.redirect(
+    new URL("/auth", request.url)
+  );
 
   try {
     const cookieStore = await cookies();

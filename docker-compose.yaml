@@ -10,7 +10,7 @@ services:
       - ./rag_client/app/:/code/rag_client/
       - /code/rag_client/node_modules
     ports:
-      - 3000:3000
+      - 3001:3001
 
   rag_chat:
     container_name: rag_chat
@@ -59,3 +59,21 @@ services:
       - ./cache:/data
     ports:
       - 6379:6379
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus_data:/prometheus
+    ports:
+      - 9090:9090
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: root
+      GF_SECURITY_ADMIN_PASSWORD: password
+    ports:
+      - 3000:3000

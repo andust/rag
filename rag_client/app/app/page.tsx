@@ -1,9 +1,9 @@
+import MainLayout from "./_layout/MainLayout";
+
 export default function Home() {
   return (
-    <div className="font-[family-name:var(--font-geist-sans)]">
-      <main>
+    <MainLayout>
         Main page
-      </main>
-    </div>
+    </MainLayout>
   );
 }
