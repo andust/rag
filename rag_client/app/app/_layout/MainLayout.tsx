@@ -16,7 +16,7 @@ export default async function MainLayout({
     <LoadUser>
       <div className="py-3">
         <Header />
-        <main className="font-[family-name:var(--font-geist-sans)] container">
+        <main className="font-[family-name:var(--font-geist-sans)] container py-5">
           {children}
         </main>
       </div>

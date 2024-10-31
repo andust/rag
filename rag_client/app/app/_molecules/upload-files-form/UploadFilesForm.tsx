@@ -3,27 +3,32 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 
 import Button from "../../_atoms/button/Button";
+import { useRouter } from "next/navigation";
 
-const NewChatForm = () => {
+const UploadFilesForm = () => {
+  const router = useRouter()
   const [files, setFiles] = useState<File[]>([]);
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (files.length === 0) return;
 
-
     const formData = new FormData();
     files.forEach((file) => formData.append("files", file));
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_CHAT_SERIVCE}/api/v1/chat`, {
-        method: "POST",
-        cache: "no-cache",
-        body: formData,
-      });
-
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_CHAT_SERIVCE}/api/v1/file/`,
+        {
+          credentials: "include",
+          method: "POST",
+          cache: "no-cache",
+          body: formData,
+        }
+      );
+      
       if (res.ok) {
-        console.log("Files uploaded successfully");
+        router.push("/files")
       } else {
         console.error("Files upload failed");
       }
@@ -50,4 +55,4 @@ const NewChatForm = () => {
   );
 };
 
-export default NewChatForm;
+export default UploadFilesForm;

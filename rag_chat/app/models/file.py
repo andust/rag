@@ -20,6 +20,12 @@ class ChatFile(BaseModel):
         )
 
 
-class ChatData(BaseModel):
+class FileData(BaseModel):
     content: bytes
     content_type: Literal["application/pdf", "text/plain", "text/csv"]
+
+    def to_text(self) -> str:
+        if self.content_type == "text/plain":
+            return str(self.content)
+
+        raise ValueError("can't convert to text")

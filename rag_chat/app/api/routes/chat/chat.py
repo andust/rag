@@ -10,6 +10,7 @@ from app.lch.main import generate_response
 from app.models.chat import Chat
 from app.models.question import Question
 from app.repository.chat import chat_repository
+from app.repository.file import file_repository
 from app.schema.chat import Ask
 from app.schema.user import User
 
@@ -42,11 +43,11 @@ async def new_chat(user: User = Depends(get_current_user)):
 async def ask(chat_id: str, ask: Ask):
     db_chat = await chat_repository.get(chat_id)
     if db_chat:
-        documents = [
-            "This is the Fundamentals of RAG course. Educative is an AI-powered online learning platform. There are 4 Generative AI courses available on Educative. I am writing this using my keyboard. JavaScript is a good programming language",
-        ]
+        file_documents = await file_repository.get_many(ask.document_ids)
 
         qst = Question(content=ask.content)
+        documents = [a.to_text() for a in file_documents]
+
         answer = generate_response(
             documents=documents,
             openai_api_key=SecretStr(os.environ["OPENAI_API_KEY"]),

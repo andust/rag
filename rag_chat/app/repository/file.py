@@ -5,7 +5,7 @@ from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 
 from app.constants.file import POSSIBLE_CONTENT_TYPE
 from app.db.main import db
-from app.models.file import ChatData, ChatFile
+from app.models.file import FileData, ChatFile
 
 
 class FileRepository:
@@ -23,7 +23,19 @@ class FileRepository:
 
         return
 
-    async def get(self, id: str) -> ChatData:
+    async def get(self, id: str) -> FileData:
+        """_summary_
+
+        Parameters
+        ----------
+        id : str
+            file id
+
+        Returns
+        -------
+        FileData
+            file content data
+        """
         # TODO use protocol to abstract this class
         fs = AsyncIOMotorGridFSBucket(db)
 
@@ -31,7 +43,22 @@ class FileRepository:
         grid_out = await fs.open_download_stream(ObjectId(id))
         content = await grid_out.read()
 
-        return ChatData(content=content, content_type=file_content)
+        return FileData(content=content, content_type=file_content)
+
+    async def get_many(self, ids: list[str]) -> list[FileData]:
+        result = []
+        # TODO use protocol to abstract this class
+        fs = AsyncIOMotorGridFSBucket(db)
+        files = (
+            await fs.find({"_id": {"$in": [ObjectId(a) for a in ids]}})
+            .sort("uploadDate", -1)
+            .limit(3)
+            .to_list()
+        )
+        for file in files:
+            result.append(await self.get(file["_id"]))
+
+        return result
 
     async def all_files(self) -> list[ChatFile]:
         # TODO use protocol to abstract this class

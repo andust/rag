@@ -12,7 +12,6 @@ export async function middleware(request: NextRequest) {
   try {
     const cookieStore = await cookies();
     const access = cookieStore.get("access")?.value ?? "";
-
     if (!access.trim()) {
       return unauthorizedResponse;
     }
@@ -38,5 +37,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/api/new-chat/", "/api/account/:path*"],
+  matcher: ["/", "/api/account/:path*"],
 };

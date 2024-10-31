@@ -12,7 +12,7 @@ export default function Header() {
     <header className="flex justify-between items-center container">
       User: {user?.email}
       <Link href="/">Home</Link>
-      <Link href="/chat/new">New chat</Link>
+      <Link href="/files">Files</Link>
       <LogoutButton>Logout</LogoutButton>
     </header>
   );

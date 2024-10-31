@@ -17,7 +17,7 @@ export async function GET() {
       method: "get",
     });
 
-    if (res.ok) {
+    if (res.status === 401) {
       cookieStore.delete("access");
       return Response.json("logged out", {
         status: 200,
