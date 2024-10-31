@@ -1,17 +1,28 @@
-import uuid
+import os
 
 from fastapi import status, Depends
-from fastapi.routing import APIRouter
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRouter
+from pydantic import SecretStr
 
 from app.api.guard.main import get_current_user
+from app.lch.main import generate_response
 from app.models.chat import Chat
 from app.models.question import Question
-from app.schema.chat import Ask, NewChat
+from app.repository.chat import chat_repository
+from app.schema.chat import Ask
 from app.schema.user import User
 
-
 router = APIRouter(default_response_class=JSONResponse)
+
+
+@router.get(
+    "/",
+    status_code=status.HTTP_200_OK,
+    response_model=list[Chat],
+)
+async def all_chats(user: User = Depends(get_current_user)):
+    return await chat_repository.get_all()
 
 
 @router.post(
@@ -19,13 +30,8 @@ router = APIRouter(default_response_class=JSONResponse)
     status_code=status.HTTP_200_OK,
     response_model=Chat,
 )
-async def new_chat(new_chat: NewChat, user: User = Depends(get_current_user)):
-    db_chat = await Chat.find_one({"user_id": user.id, "title": None})
-    if not db_chat:
-        db_chat = Chat(user_id=user.id, title=None)
-        await db_chat.save()
-
-    return db_chat
+async def new_chat(user: User = Depends(get_current_user)):
+    return await chat_repository.new(user_id=user.id)
 
 
 @router.post(
@@ -34,14 +40,23 @@ async def new_chat(new_chat: NewChat, user: User = Depends(get_current_user)):
     response_model=Chat,
 )
 async def ask(chat_id: str, ask: Ask):
-    chat = await Chat.get(chat_id)
-    if chat:
+    db_chat = await chat_repository.get(chat_id)
+    if db_chat:
+        documents = [
+            "This is the Fundamentals of RAG course. Educative is an AI-powered online learning platform. There are 4 Generative AI courses available on Educative. I am writing this using my keyboard. JavaScript is a good programming language",
+        ]
+
         qst = Question(content=ask.content)
+        answer = generate_response(
+            documents=documents,
+            openai_api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
+            query_text=qst.content,
+        )
+        qst.answer = answer
 
-        qst.answer = f"{uuid.uuid4().hex}"
-        if chat.questions is None:
-            chat.questions = []
-        chat.questions.append(qst)
-        await chat.save()
+        questions = db_chat.questions or []
+        questions.append(qst)
+        db_chat.questions = questions
+        await chat_repository.update(chat_id, db_chat)
 
-    return chat
+    return db_chat

@@ -1,7 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { getUser, User } from "../_models/user";
+import { getClientUser, User } from "../_models/user";
 import { ChildrenProp } from "../types";
 
 interface UserContextProps {
@@ -28,7 +28,7 @@ export const LoadUser = ({ children }: ChildrenProp) => {
   const { setUser } = useContext(UserContext);
 
   useEffect(() => {
-    getUser().then(async (result) => {
+    getClientUser().then(async (result) => {
       if (result.ok) {
         setUser(await result.json());
       }

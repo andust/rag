@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-import { getUser } from "./app/_utils/fetch";
+import { getUser } from "./app/_utils/fetch/user";
 import { headerAccess } from "./app/_utils/cookie";
-import { request } from "http";
 
 export async function middleware(request: NextRequest) {
   const unauthorizedResponse = NextResponse.redirect(
@@ -39,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/api/account/:path*"],
+  matcher: ["/", "/api/new-chat/", "/api/account/:path*"],
 };

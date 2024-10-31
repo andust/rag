@@ -1,11 +1,12 @@
-import { FormEvent } from "react";
+import { ChangeEvent } from "react";
 
 interface Props {
   value: string | number;
   name?: string;
-  type?: "text" | "password" | "file";
+  type?: "text" | "password";
   placeholder?: string;
-  onChange?: (e: FormEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  multiple?: boolean;
 }
 
 export default function Input({
@@ -13,7 +14,7 @@ export default function Input({
   name,
   type = "text",
   placeholder = "",
-  onChange
+  onChange,
 }: Props) {
   return (
     <input

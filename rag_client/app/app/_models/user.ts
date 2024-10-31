@@ -7,6 +7,6 @@ export interface User {
   updatedAt: string;
 }
 
-export const getUser = async () => {
+export const getClientUser = async () => {
   return fetch("/api/account", { method: "get", cache: "no-cache" });
 };
