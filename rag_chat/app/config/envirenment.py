@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     MONGO_CONNECTION: str
     MONGO_DB: str
     CLIENT_SERVICE: str
+    QDRANT_URL: str
+    QDRANT_MAIN_DOCUMANTS: str
 
 
 def _configure_initial_settings() -> Callable[[], Settings]:

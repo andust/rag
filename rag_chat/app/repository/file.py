@@ -1,10 +1,12 @@
 from bson import ObjectId
 from fastapi import UploadFile
+from langchain_core.documents import Document
 from motor.motor_asyncio import AsyncIOMotorCollection
 from motor.motor_asyncio import AsyncIOMotorGridFSBucket
 
 from app.constants.file import POSSIBLE_CONTENT_TYPE
 from app.db.main import db
+from app.libs.qdrant.upload_document import upload_documents
 from app.models.file import FileData, ChatFile
 
 
@@ -72,14 +74,25 @@ class FileRepository:
         fs = AsyncIOMotorGridFSBucket(db)
 
         file_ids = []
+        docs: list[Document] = []
         for file in files:
             if file.content_type in POSSIBLE_CONTENT_TYPE:
+                content = file.file.read()
                 file_id = await fs.upload_from_stream(
                     file.filename or "no-name",
-                    file.file.read(),
+                    content,
                     metadata={"content_type": file.content_type, "user": user_email},
                 )
                 file_ids.append(str(file_id))
+                docs.append(
+                    Document(
+                        page_content=str(content),
+                        metadata={"file_id": str(file_id), "title": file.filename},
+                    )
+                )
+
+        with upload_documents(docs=docs):
+            ...
 
         return file_ids
 

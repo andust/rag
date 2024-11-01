@@ -1,18 +1,14 @@
-import os
-
 from fastapi import status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
-from pydantic import SecretStr
 
 from app.api.guard.main import get_current_user
-from app.lch.main import generate_response
 from app.models.chat import Chat
 from app.models.question import Question
 from app.repository.chat import chat_repository
-from app.repository.file import file_repository
 from app.schema.chat import Ask
 from app.schema.user import User
+from app.usecase.chat import ChatUseCase
 
 router = APIRouter(default_response_class=JSONResponse)
 
@@ -43,17 +39,10 @@ async def new_chat(user: User = Depends(get_current_user)):
 async def ask(chat_id: str, ask: Ask):
     db_chat = await chat_repository.get(chat_id)
     if db_chat:
-        file_documents = await file_repository.get_many(ask.document_ids)
+        chat_use_case = ChatUseCase()
 
-        qst = Question(content=ask.content)
-        documents = [a.to_text() for a in file_documents]
-
-        answer = generate_response(
-            documents=documents,
-            openai_api_key=SecretStr(os.environ["OPENAI_API_KEY"]),
-            query_text=qst.content,
-        )
-        qst.answer = answer
+        answer = await chat_use_case.ask(query=ask.content)
+        qst = Question(content=ask.content, answer=answer)
 
         questions = db_chat.questions or []
         questions.append(qst)
