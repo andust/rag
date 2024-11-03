@@ -7,13 +7,17 @@ import Link from "next/link";
 
 export default function Header() {
   const { user } = useContext(UserContext);
-  
+
   return (
     <header className="flex justify-between items-center container">
-      User: {user?.email}
-      <Link href="/">Home</Link>
-      <Link href="/files">Files</Link>
-      <LogoutButton>Logout</LogoutButton>
+      <div className="flex gap-x-5">
+        <Link href="/">Home</Link>
+        <Link href="/files">Files</Link>
+      </div>
+      <div className="gap-x-2">
+        User: {user?.email}&nbsp;
+        <LogoutButton>Logout</LogoutButton>
+      </div>
     </header>
   );
 }

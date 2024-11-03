@@ -1,4 +1,4 @@
-from fastapi import status, Depends
+from fastapi import HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
 
@@ -31,12 +31,25 @@ async def new_chat(user: User = Depends(get_current_user)):
     return await chat_repository.new(user_id=user.id)
 
 
-@router.post(
-    "/ask/{chat_id}",
+@router.get(
+    "/{chat_id}",
     status_code=status.HTTP_200_OK,
     response_model=Chat,
 )
+async def get_chat(chat_id: str, user: User = Depends(get_current_user)):
+    chat = await chat_repository.get(chat_id)
+    if chat and user.id != chat.user_id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="not found for user")
+    return chat
+
+
+@router.post(
+    "/ask/{chat_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=list[Question],
+)
 async def ask(chat_id: str, ask: Ask):
+    questions = []
     db_chat = await chat_repository.get(chat_id)
     if db_chat:
         chat_use_case = ChatUseCase()
@@ -49,4 +62,4 @@ async def ask(chat_id: str, ask: Ask):
         db_chat.questions = questions
         await chat_repository.update(chat_id, db_chat)
 
-    return db_chat
+    return questions

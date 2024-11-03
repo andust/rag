@@ -24,4 +24,7 @@ body {
   a {
     @apply underline
   }
+  textarea {
+    @apply block resize-none p-2.5 w-full text-gray-900 bg-gray-50 rounded dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white
+  }
 }

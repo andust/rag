@@ -7,6 +7,7 @@ export interface ThemeProp {
 interface Props extends ChildrenProp, ClassNameProp, ThemeProp {
   type?: "button" | "submit" | "reset";
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }
 
 const THEME_CLASSNAMES = {
@@ -20,12 +21,15 @@ export default function Button({
   type = "button",
   onClick,
   theme = "base",
+  disabled = false,
 }: Props) {
+  const disabledClassName = disabled ? "text-slate-300 bg-slate-100" : "";
   return (
     <button
-      className={`${className} ${THEME_CLASSNAMES[theme]}`}
+      className={`${className} ${THEME_CLASSNAMES[theme]} ${disabledClassName}`}
       type={type}
       onClick={onClick && onClick}
+      disabled={disabled}
     >
       {children}
     </button>

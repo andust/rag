@@ -10,10 +10,14 @@ class ChatRepository:
         self.collection = collection
 
     async def new(self, user_id: str) -> Chat | None:
-        db_chat = await self.collection.find_one({"user_id": user_id, "question": None})
+        db_chat = await self.collection.find_one(
+            {"user_id": user_id, "questions": None}
+        )
         if not db_chat:
             new_chat = Chat(user_id=user_id)
-            result = await self.collection.insert_one(new_chat.model_dump())
+            dump_data = new_chat.model_dump()
+            del dump_data["id"]
+            result = await self.collection.insert_one(dump_data)
             new_chat.id = str(result.inserted_id)
 
             return new_chat
@@ -27,7 +31,8 @@ class ChatRepository:
         return None
 
     async def get_all(self) -> list[Chat]:
-        return await self.collection.find({}).to_list()
+        result = await self.collection.find({}).sort({"_id": -1}).to_list()
+        return [Chat.from_dict(a) for a in result]
 
     async def update(self, id: str, data: Chat) -> Chat | None:
         document = data.model_dump(exclude_unset=True, by_alias=True)

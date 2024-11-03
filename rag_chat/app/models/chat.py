@@ -13,5 +13,5 @@ class Chat(BaseModel):
         return Chat(
             id=str(data.get("_id")) or None,
             user_id=data.get("user_id") or "",
-            questions=data.get("questions") or [],
+            questions=data.get("questions"),
         )
