@@ -30,3 +30,17 @@ OPENAI_API_KEY=your_openai_api_key
 
 # Start the project using Docker Compose
 docker compose up
+```
+
+# Adding a sample user locally:
+
+```bash
+# Run the following command to build the necessary script:
+make build-script
+
+# Access the rag_user_srv container:
+docker compose exec rag_user_srv sh
+
+# Execute the script to add sample data:
+./scripts/migrate-dev-data
+```
