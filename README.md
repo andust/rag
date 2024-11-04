@@ -17,3 +17,16 @@ The **RAG** (Retrieval-Augmented Generation) project is a tool that enables the 
    - Implement functionality to allow the submission of documents in PDF format to the database. This feature should handle PDF parsing and conversion to a format suitable for text processing and indexing.
 
 ## Installation
+
+To run the project locally, follow these steps:
+
+```bash
+
+# Rename the .env.example file to .env
+mv .env.example .env
+
+# Add your OpenAI API key to the .env file
+OPENAI_API_KEY=your_openai_api_key
+
+# Start the project using Docker Compose
+docker compose up
