@@ -32,8 +32,8 @@ OPENAI_API_KEY=your_openai_api_key
 docker compose up
 ```
 
-# Adding a sample user locally:
-
+## Adding a sample user locally:
+### TODO processes this in one makefile script
 ```bash
 # Run the following command to build the necessary script:
 make build-script
