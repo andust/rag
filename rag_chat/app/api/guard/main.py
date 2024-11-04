@@ -2,7 +2,7 @@ from fastapi import HTTPException, Request, status
 import httpx
 
 from app.config.envirenment import get_settings
-from app.schema.user import User
+from app.models.user import User
 
 _S = get_settings()
 

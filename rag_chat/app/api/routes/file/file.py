@@ -5,7 +5,7 @@ from fastapi.routing import APIRouter
 from app.api.guard.main import get_current_user
 from app.models.file import ChatFile
 from app.repository.file import file_repository
-from app.schema.user import User
+from app.models.user import User
 
 
 router = APIRouter(default_response_class=JSONResponse)
@@ -17,7 +17,7 @@ router = APIRouter(default_response_class=JSONResponse)
     response_model=list[ChatFile],
 )
 async def all_files(user: User = Depends(get_current_user)):
-    results = await file_repository.all_files()
+    results = await file_repository.get_many()
     return results
 
 

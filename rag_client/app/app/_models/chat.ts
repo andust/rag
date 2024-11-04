@@ -30,3 +30,11 @@ export const getClientAskChat = async (id: string, question: string) => {
     }
   );
 };
+
+export const removeClientChat = async (id: string) => {
+  return fetch(`${process.env.NEXT_PUBLIC_CHAT_SERIVCE}/api/v1/chat/${id}`, {
+    cache: "no-cache",
+    credentials: "include",
+    method: "delete",
+  });
+};

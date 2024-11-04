@@ -28,7 +28,7 @@ class ChatRepository:
         document = await self.collection.find_one({"_id": ObjectId(id)})
         if document:
             return Chat.from_dict(document)
-        return None
+        return
 
     async def get_all(self) -> list[Chat]:
         result = await self.collection.find({}).sort({"_id": -1}).to_list()
@@ -41,7 +41,16 @@ class ChatRepository:
         )
         if result.modified_count:
             return await self.get(id)
-        return None
+        return
+
+    async def delete(self, id: str) -> str | None:
+        print("id", id)
+        result = await self.collection.delete_one(
+            {"_id": ObjectId(id)},
+        )
+        if result.deleted_count:
+            return "ok"
+        return
 
 
 chat_repository = ChatRepository(collection=db["chats"])

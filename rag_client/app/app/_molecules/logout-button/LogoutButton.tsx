@@ -8,7 +8,7 @@ interface Props extends ChildrenProp, ClassNameProp, ThemeProp {}
 export default function LogoutButton({
   children,
   className = "",
-  theme = "primary",
+  theme = "base",
 }: Props) {
   const handleLogout = async () => {
     try {

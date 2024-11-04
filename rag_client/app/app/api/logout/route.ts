@@ -4,6 +4,7 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
     const access = cookieStore.get("access")?.value ?? "";
+
     if (!access) {
       return Response.json("error", { status: 403 });
     }
@@ -17,7 +18,7 @@ export async function GET() {
       method: "get",
     });
 
-    if (res.status === 401) {
+    if ([401, 200].includes(res.status)) {
       cookieStore.delete("access");
       return Response.json("logged out", {
         status: 200,

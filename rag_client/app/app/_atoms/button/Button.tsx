@@ -1,7 +1,7 @@
 import { ChildrenProp, ClassNameProp } from "../../types";
 
 export interface ThemeProp {
-  theme?: "base" | "primary";
+  theme?: "base" | "primary" | "danger";
 }
 
 interface Props extends ChildrenProp, ClassNameProp, ThemeProp {
@@ -13,6 +13,7 @@ interface Props extends ChildrenProp, ClassNameProp, ThemeProp {
 const THEME_CLASSNAMES = {
   base: "px-3 py-2 border bg-white text-black",
   primary: "px-3 py-2 border bg-green text-white",
+  danger: "px-3 py-2 border bg-red text-white",
 };
 
 export default function Button({

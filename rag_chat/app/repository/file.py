@@ -47,14 +47,15 @@ class FileRepository:
 
         return FileData(content=content, content_type=file_content)
 
-    async def get_many(self, ids: list[str]) -> list[FileData]:
+    async def get_many_by_ids(self, ids: list[str]) -> list[FileData]:
         result = []
         # TODO use protocol to abstract this class
+        # limit param
         fs = AsyncIOMotorGridFSBucket(db)
         files = (
             await fs.find({"_id": {"$in": [ObjectId(a) for a in ids]}})
             .sort("uploadDate", -1)
-            .limit(3)
+            .limit(20)
             .to_list()
         )
         for file in files:
@@ -62,8 +63,9 @@ class FileRepository:
 
         return result
 
-    async def all_files(self) -> list[ChatFile]:
+    async def get_many(self) -> list[ChatFile]:
         # TODO use protocol to abstract this class
+        # limit param
         fs = AsyncIOMotorGridFSBucket(db)
         most_recent_three = await fs.find().sort("uploadDate", -1).limit(3).to_list()
 

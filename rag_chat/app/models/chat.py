@@ -15,3 +15,8 @@ class Chat(BaseModel):
             user_id=data.get("user_id") or "",
             questions=data.get("questions"),
         )
+
+
+class Ask(BaseModel):
+    content: str
+
