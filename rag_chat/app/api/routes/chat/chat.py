@@ -65,18 +65,16 @@ async def delete_chat(chat_id: str):
 )
 async def ask(chat_id: str, ask: Ask):
     questions = []
-    if ask.chat_mode not in ChatMode:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="not found for user"
-        )
+
     db_chat = await chat_repository.get(chat_id)
     if db_chat:
         chat_use_case = ChatUseCase(history=db_chat.questions)
 
-        if ask.chat_mode is ChatMode.CHAT:
-            answer = await chat_use_case.ask(query=ask.content)
-        elif ask.chat_mode is ChatMode.RAG:
-            answer = await chat_use_case.ask_rag(query=ask.content)
+        ask_cb = {
+            ChatMode.CHAT: chat_use_case.ask(query=ask.content),
+            ChatMode.RAG: chat_use_case.ask_rag(query=ask.content)
+        }
+        answer = await ask_cb[ask.chat_mode]
 
         qst = Question(content=ask.content, answer=answer)
         questions = db_chat.questions or []
