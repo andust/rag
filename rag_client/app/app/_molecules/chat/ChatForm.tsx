@@ -71,7 +71,7 @@ const LoginForm = ({ id }: { id: string }) => {
   }, [cleanContent]);
 
   return (
-    <>
+    <form className="space-y-5" onSubmit={onSubmitHandler}>
       <Select<ChatMode>
         options={options}
         onOptionChange={(o) => {
@@ -80,26 +80,24 @@ const LoginForm = ({ id }: { id: string }) => {
         defaultOption={options[0]}
         label="Select mode"
       />
-      <form className="space-y-5 text-black" onSubmit={onSubmitHandler}>
-        <div className="relative">
-          {isLoading && <Spinner className="absolute-center" />}
-          <label>
-            <small className="text-red">{errors.join("\n")}</small>
-            <Textarea
-              value={content}
-              placeholder="Write your question here..."
-              onChange={(e) => setContent(e.target.value)}
-              disabled={isLoading}
-            />
-          </label>
-        </div>
-        <div className="flex justify-end">
-          <Button type="submit" disabled={isLoading || isError}>
-            Ask {chatMode}
-          </Button>
-        </div>
-      </form>
-    </>
+      <div className="relative">
+        {isLoading && <Spinner className="absolute-center" />}
+        <label>
+          <small className="text-red">{errors.join("\n")}</small>
+          <Textarea
+            value={content}
+            placeholder="Write your question here..."
+            onChange={(e) => setContent(e.target.value)}
+            disabled={isLoading}
+          />
+        </label>
+      </div>
+      <div className="flex justify-end">
+        <Button type="submit" disabled={isLoading || isError}>
+          Ask {chatMode}
+        </Button>
+      </div>
+    </form>
   );
 };
 

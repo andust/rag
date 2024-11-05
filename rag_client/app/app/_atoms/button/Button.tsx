@@ -11,7 +11,7 @@ interface Props extends ChildrenProp, ClassNameProp, ThemeProp {
 }
 
 const THEME_CLASSNAMES = {
-  base: "px-3 py-2 border bg-white text-black",
+  base: "px-3 py-2 border text-white",
   primary: "px-3 py-2 border bg-green text-white",
   danger: "px-3 py-2 border bg-red text-white",
 };
@@ -24,7 +24,7 @@ export default function Button({
   theme = "base",
   disabled = false,
 }: Props) {
-  const disabledClassName = disabled ? "text-slate-300 bg-slate-100" : "";
+  const disabledClassName = disabled ? "text-slate-400 bg-slate-300" : "";
   return (
     <button
       className={`${className} ${THEME_CLASSNAMES[theme]} ${disabledClassName}`}

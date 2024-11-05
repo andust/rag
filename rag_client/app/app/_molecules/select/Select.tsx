@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import "./select.css";
+import Button from "@/app/_atoms/button/Button";
 
 export interface Option<V> {
   label: string | ReactNode;
@@ -58,12 +59,12 @@ const Select = <V,>({
 
   return (
     <div className="relative" ref={selectRef}>
-      <button
+      <Button
         onClick={toggleSelect}
         className="w-full relative z-20 bg-black p-2 border rounded text-left"
       >
         {selectedOption?.label || label}
-      </button>
+      </Button>
       <ul
         className={`absolute z-10 w-full mt-1 bg-black border rounded transition-all duration-200 ease-in-out${showClassName}`}
       >
