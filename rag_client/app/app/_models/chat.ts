@@ -1,3 +1,5 @@
+import { ChatMode } from "../types";
+
 export interface Chat {
   id: string;
   questions: Question[];
@@ -16,7 +18,11 @@ export const getClientChat = async (id: string) => {
   });
 };
 
-export const getClientAskChat = async (id: string, question: string) => {
+export const getClientAskChat = async (
+  id: string,
+  question: string,
+  chatMode: ChatMode
+) => {
   return fetch(
     `${process.env.NEXT_PUBLIC_CHAT_SERIVCE}/api/v1/chat/ask/${id}`,
     {
@@ -26,7 +32,7 @@ export const getClientAskChat = async (id: string, question: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ content: question }),
+      body: JSON.stringify({ content: question, chat_mode: chatMode }),
     }
   );
 };

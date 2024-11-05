@@ -13,6 +13,8 @@ export interface ClassNameProp {
   className?: string;
 }
 
-export interface IdParams{
-  params: Promise<{ id: string }>
+export interface IdParams {
+  params: Promise<{ id: string }>;
 }
+
+export type ChatMode = "chat" | "rag";

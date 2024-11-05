@@ -7,18 +7,6 @@ import { Chat, getClientChat, removeClientChat } from "@/app/_models/chat";
 import { ChatContext } from "@/app/_context/chatContext";
 import Button from "@/app/_atoms/button/Button";
 import Confirm from "@/app/_atoms/confirm/Confirm";
-import Select, { Option } from "@/app/_molecules/select/Select";
-
-const options: Option[] = [
-  {
-    label: "Chat",
-    value: "chat",
-  },
-  {
-    label: "RAG",
-    value: "rag",
-  },
-];
 
 const ChatContent = ({ id }: { id: string }) => {
   const router = useRouter();
@@ -46,14 +34,7 @@ const ChatContent = ({ id }: { id: string }) => {
       <Confirm onConfirm={handleOnDelete}>
         <Button>Delete chat</Button>
       </Confirm>
-      <Select
-        options={options}
-        onOptionChange={(o) => {
-          console.log("o", o);
-        }}
-        defaultOption={options[0]}
-        label="Select mode"
-      />
+
       {questions?.map((question, index) => {
         const whitespaceClassname = question.answer.includes("```")
           ? "whitespace-pre-line"

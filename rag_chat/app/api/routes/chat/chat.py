@@ -6,7 +6,7 @@ from app.api.guard.main import get_current_user
 from app.models.chat import Chat
 from app.models.question import Question
 from app.repository.chat import chat_repository
-from app.models.chat import Ask
+from app.models.chat import Ask, ChatMode
 from app.models.user import User
 from app.usecase.chat import ChatUseCase
 
@@ -57,6 +57,7 @@ async def delete_chat(chat_id: str):
 
     return
 
+
 @router.post(
     "/ask/{chat_id}",
     status_code=status.HTTP_200_OK,
@@ -64,13 +65,20 @@ async def delete_chat(chat_id: str):
 )
 async def ask(chat_id: str, ask: Ask):
     questions = []
+    if ask.chat_mode not in ChatMode:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="not found for user"
+        )
     db_chat = await chat_repository.get(chat_id)
     if db_chat:
         chat_use_case = ChatUseCase(history=db_chat.questions)
 
-        answer = await chat_use_case.ask(query=ask.content)
-        qst = Question(content=ask.content, answer=answer)
+        if ask.chat_mode is ChatMode.CHAT:
+            answer = await chat_use_case.ask(query=ask.content)
+        elif ask.chat_mode is ChatMode.RAG:
+            answer = await chat_use_case.ask_rag(query=ask.content)
 
+        qst = Question(content=ask.content, answer=answer)
         questions = db_chat.questions or []
         questions.append(qst)
         db_chat.questions = questions

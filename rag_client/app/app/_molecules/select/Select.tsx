@@ -4,21 +4,28 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 
 import "./select.css";
 
-export interface Option {
+export interface Option<V> {
   label: string | ReactNode;
-  value: string | number;
+  value: V;
 }
 
-interface SelectProps {
-  options: Option[];
+interface SelectProps<V> {
+  options: Option<V>[];
   label: string;
-  onOptionChange: (option: Option) => void;
-  defaultOption?: Option | null;
+  onOptionChange: (option: Option<V>) => void;
+  defaultOption?: Option<V> | null;
 }
 
-const Select = ({ options, label, onOptionChange, defaultOption = null }: SelectProps) => {
+const Select = <V,>({
+  options,
+  label,
+  onOptionChange,
+  defaultOption = null,
+}: SelectProps<V>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<Option | null>(defaultOption);
+  const [selectedOption, setSelectedOption] = useState<Option<V> | null>(
+    defaultOption
+  );
   const selectRef = useRef<HTMLDivElement>(null);
 
   const showClassName = isOpen ? " show" : "";
@@ -27,7 +34,7 @@ const Select = ({ options, label, onOptionChange, defaultOption = null }: Select
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option: Option) => {
+  const handleOptionClick = (option: Option<V>) => {
     setSelectedOption(option);
     onOptionChange(option);
     setIsOpen(false);
@@ -62,7 +69,7 @@ const Select = ({ options, label, onOptionChange, defaultOption = null }: Select
       >
         {options.map((option) => (
           <li
-            key={option.value}
+            key={`${option.value}`}
             onClick={() => handleOptionClick(option)}
             className="p-2 hover:bg-gray-700 cursor-pointer"
           >

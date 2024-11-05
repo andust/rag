@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 
 from app.models.question import Question
@@ -17,6 +18,11 @@ class Chat(BaseModel):
         )
 
 
+class ChatMode(str, Enum):
+    CHAT = "chat"
+    RAG = "rag"
+
+
 class Ask(BaseModel):
     content: str
-
+    chat_mode: ChatMode
