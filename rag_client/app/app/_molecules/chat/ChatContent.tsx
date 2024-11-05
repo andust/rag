@@ -1,12 +1,24 @@
 "use client";
 
 import { useContext, useEffect } from "react";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 
 import { Chat, getClientChat, removeClientChat } from "@/app/_models/chat";
 import { ChatContext } from "@/app/_context/chatContext";
 import Button from "@/app/_atoms/button/Button";
 import Confirm from "@/app/_atoms/confirm/Confirm";
+import Select, { Option } from "@/app/_molecules/select/Select";
+
+const options: Option[] = [
+  {
+    label: "Chat",
+    value: "chat",
+  },
+  {
+    label: "RAG",
+    value: "rag",
+  },
+];
 
 const ChatContent = ({ id }: { id: string }) => {
   const router = useRouter();
@@ -21,28 +33,45 @@ const ChatContent = ({ id }: { id: string }) => {
       });
   }, [id, setQuestions]);
 
-
   const handleOnDelete = () => {
     removeClientChat(id).then((res) => {
       if (res.ok) {
-        router.push("/")
+        router.push("/");
       }
-    })
-  }
+    });
+  };
 
   return (
     <div className="space-y-8">
       <Confirm onConfirm={handleOnDelete}>
         <Button>Delete chat</Button>
       </Confirm>
-      {questions?.map((question, index) => (
-        <div key={`${question.content}-${index}`}>
-          <h2 className="p-2 rounded bg-slate-700 mb-1">{question.content}</h2>
-          <pre className="p-2 whitespace-pre text-left w-11/12 bg-slate-900 rounded ml-auto mr-0 overflow-auto ">
-            {question.answer}
-          </pre>
-        </div>
-      ))}
+      <Select
+        options={options}
+        onOptionChange={(o) => {
+          console.log("o", o);
+        }}
+        defaultOption={options[0]}
+        label="Select mode"
+      />
+      {questions?.map((question, index) => {
+        const whitespaceClassname = question.answer.includes("```")
+          ? "whitespace-pre-line"
+          : "whitespace-pre";
+
+        return (
+          <div key={`${question.content}-${index}`}>
+            <h2 className="p-2 rounded bg-slate-700 mb-1">
+              {question.content}
+            </h2>
+            <pre
+              className={`p-2 ${whitespaceClassname} text-left w-11/12 bg-slate-900 rounded ml-auto mr-0 overflow-auto `}
+            >
+              {question.answer}
+            </pre>
+          </div>
+        );
+      })}
     </div>
   );
 };

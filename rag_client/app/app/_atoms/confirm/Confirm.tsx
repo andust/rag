@@ -24,7 +24,7 @@ const Confirm: React.FC<ConfirmProps> = ({ onConfirm, children }) => {
 
   return (
     <div>
-      {isVisible && <div onClick={handleClick}>{children}</div>}
+      {isVisible && <span onClick={handleClick}>{children}</span>}
       {!isVisible && (
         <div className="flex items-center space-x-3">
           <p>Are you sure you want to continue?</p>
